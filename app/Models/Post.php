@@ -17,20 +17,28 @@ class Post extends Model
         'images',
         'body',
         'pending',
-        'approved_by',
+        // ID of the user who approved the post (nullable)
+                'approved_by',
     ];
 
     protected $casts = [
         'images' => 'array',
+        'pending' => 'boolean',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
+
+    // Relationship to the user who approved the post
+    public function approvedBy()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
 }
+

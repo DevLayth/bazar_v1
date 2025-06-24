@@ -335,7 +335,7 @@ public function approvePost(Request $request, Post $post)
 {
     $user = Auth::user();
     try {
-        $post->pending = 0;
+        $post->pending = false;
         $post->approved_by = $user->id;
         $post->saveOrFail();
 
