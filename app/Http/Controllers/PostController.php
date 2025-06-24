@@ -327,10 +327,11 @@ use Illuminate\Support\Facades\Log;
 
 public function approvePost(Request $request, Post $post)
 {
+    $user = Auth::user();
     try {
         $post->pending = 0;
-        $post->approved_by = Auth::id();
-        $post->saveOrFail(); // throws exception if save fails
+        $post->approved_by = $user->id;
+        $post->saveOrFail(); 
 
         return response()->json([
             'success' => true,
