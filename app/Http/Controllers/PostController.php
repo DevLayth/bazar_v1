@@ -67,6 +67,7 @@ class PostController extends Controller
                     'body' => $post->body,
                     'price' => $post->price,
                     'pending' => $post->pending,
+                    'approved_by' => $post->approved_by->name ?? null,
                     'currency' => $post->currency,
                     'category_id' => $post->category_id,
                     'created_at' => $post->created_at,

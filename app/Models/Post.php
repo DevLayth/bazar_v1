@@ -17,6 +17,7 @@ class Post extends Model
         'images',
         'body',
         'pending',
+        'approved_by',
     ];
 
     protected $casts = [

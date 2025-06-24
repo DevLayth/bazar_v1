@@ -5,9 +5,9 @@ use App\Http\Controllers\SendSMSController;
 use App\Http\Controllers\admin\AdminController;
 
 //welcome page
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
+// Route::get('/', function () {
+//     return view('welcome');
+// })->name('welcome');
 
 Route::get('/emailverified', function () {
     return view('verified');
