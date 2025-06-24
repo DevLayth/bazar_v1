@@ -327,7 +327,6 @@ class PostController extends Controller
 public function approvePost(Request $request, Post $post)
 {
     try {
-        // Update post status
         $post->update([
             'pending' => 0,
             'approved_by' => Auth::id(),
@@ -338,19 +337,16 @@ public function approvePost(Request $request, Post $post)
             'message' => 'Post approved successfully.',
             'data' => $post,
         ]);
-    } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'You are not authorized to approve this post.',
-        ], 403);
     } catch (\Exception $e) {
         Log::error('Error approving post: ' . $e->getMessage());
+
         return response()->json([
             'success' => false,
             'message' => 'Failed to approve post.',
         ], 500);
     }
 }
+
 
 
 }
