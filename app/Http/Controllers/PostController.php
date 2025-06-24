@@ -327,7 +327,6 @@ class PostController extends Controller
     public function approvePost(Request $request, Post $post)
     {
         try {
-            $this->authorize('approve', $post);
             $post->pending = 0;
             $post->approved_by = Auth::user()->id;
             $post->save();
