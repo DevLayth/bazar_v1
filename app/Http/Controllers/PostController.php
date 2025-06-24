@@ -331,6 +331,7 @@ public function approvePost(Request $request, Post $post)
             'pending' => 0,
             'approved_by' => Auth::id(),
         ]);
+        $post->saveOrFail();
 
         return response()->json([
             'success' => true,
