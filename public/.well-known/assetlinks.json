@@ -1,0 +1,12 @@
+[
+    {
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "net.localto.xkswn64",
+        "sha256_cert_fingerprints": [
+          "SHA256:46:ED:B6:87:88:81:52:1A:67:BD:56:86:56:CC:28:3D:99:F8:40:F3:90:69:14:1A:29:EB:12:AF:08:49:7E:D5"
+        ]
+      }
+    }
+  ]
