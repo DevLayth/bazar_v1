@@ -328,7 +328,7 @@ class PostController extends Controller
     {
         try {
             $this->authorize('approve', $post);
-            $post->pending = false;
+            $post->pending = 0;
             $post->approved_by = Auth::user()->id;
             $post->save();
             return response()->json([
