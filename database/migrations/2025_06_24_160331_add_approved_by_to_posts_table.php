@@ -16,8 +16,7 @@ return new class extends Migration
             $table->foreign('approved_by')
                 ->references('id')
                 ->on('users')
-                ->onDelete('set null')
-                ->onUpdate('cascade');
+                ->onDelete('set null');
         });
     }
 
