@@ -324,22 +324,23 @@ class PostController extends Controller
 
 
     // approval post
+use Illuminate\Support\Facades\Log;
+
 public function approvePost(Request $request, Post $post)
 {
     try {
-        $post->update([
-            'pending' => 0,
-            'approved_by' => Auth::id(),
-        ]);
-        $post->saveOrFail();
+        $post->pending = 0;
+        $post->approved_by = Auth::id();
+        $post->saveOrFail(); // throws exception if save fails
 
         return response()->json([
             'success' => true,
             'message' => 'Post approved successfully.',
-            'data' => $post,
+            'data' => $post->fresh(),
         ]);
     } catch (\Exception $e) {
         Log::error('Error approving post: ' . $e->getMessage());
+        Log::error($e->getTraceAsString()); // Add this line for more info
 
         return response()->json([
             'success' => false,
@@ -351,3 +352,5 @@ public function approvePost(Request $request, Post $post)
 
 
 }
+
+
