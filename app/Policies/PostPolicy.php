@@ -9,7 +9,7 @@ class PostPolicy
 {
     public function modify(User $user, Post $post): Response
     {
-        return $user->id === $post->user_id
+        return $user->id === $post->user_id || $user->admin == 1
             ? Response::allow()
             : Response::deny('You do not own this post.');
     }
@@ -26,5 +26,12 @@ class PostPolicy
         return $user->id === $post->user_id
             ? Response::allow()
             : Response::deny('You do not own this post.');
+    }
+
+    public function approve(User $user, Post $post): Response
+    {
+        return $user->admin == 1
+            ? Response::allow()
+            : Response::deny('Only admins can approve posts.');
     }
 }
