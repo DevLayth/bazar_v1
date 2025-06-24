@@ -321,4 +321,27 @@ class PostController extends Controller
             ], 500);
         }
     }
+
+
+    // approval post
+    public function approvePost(Request $request, Post $post)
+    {
+        try {
+            $this->authorize('approve', $post);
+            $post->pending = false;
+            $post->approved_by = Auth::user()->id;
+            $post->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Post approved successfully.',
+                'data' => $post,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error approving post: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to approve post.',
+            ], 500);}
+        }
+
 }
