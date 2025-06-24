@@ -54,7 +54,7 @@ class PostController extends Controller
     public function adminIndex()
     {
         try {
-            $posts = Post::with(['user.profile'])->latest()->get()->map(function ($post) {
+            $posts = Post::with(['user.profile', 'approvedBy'])->latest()->get()->map(function ($post) {
                 return [
                     'id' => $post->id,
                     'user_id' => $post->user->id,
@@ -66,7 +66,7 @@ class PostController extends Controller
                     'body' => $post->body,
                     'price' => $post->price,
                     'pending' => $post->pending,
-                    'approved_by' => $post->approved_by->name ?? null,
+                    'approved_by' => $post->approvedBy ? $post->approvedBy->name : null,
                     'currency' => $post->currency,
                     'category_id' => $post->category_id,
                     'created_at' => $post->created_at,
@@ -323,15 +323,20 @@ class PostController extends Controller
 
 
     // approval post
-use Illuminate\Support\Facades\Log;
-
+/**
+ * Approves a pending post by setting its pending status to false and recording the approver.
+ *
+ * @param \Illuminate\Http\Request $request The incoming HTTP request.
+ * @param \App\Models\Post $post The post to be approved.
+ * @return \Illuminate\Http\JsonResponse JSON response indicating success or failure.
+ */
 public function approvePost(Request $request, Post $post)
 {
     $user = Auth::user();
     try {
         $post->pending = 0;
         $post->approved_by = $user->id;
-        $post->saveOrFail(); 
+        $post->saveOrFail();
 
         return response()->json([
             'success' => true,
@@ -340,7 +345,9 @@ public function approvePost(Request $request, Post $post)
         ]);
     } catch (\Exception $e) {
         Log::error('Error approving post: ' . $e->getMessage());
-        Log::error($e->getTraceAsString()); // Add this line for more info
+        if (app()->environment('local') || config('app.debug')) {
+            Log::error($e->getTraceAsString());
+        }
 
         return response()->json([
             'success' => false,
