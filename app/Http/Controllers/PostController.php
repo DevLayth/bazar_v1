@@ -359,42 +359,4 @@ public function approvePost(Request $request, Post $post)
     ]);
 }
 
-
-
- public function reject(Post $post)
-    {
-        try {
-            $this->authorize('reject', $post);
-            $images = json_decode($post->images, true);
-
-            if (is_array($images)) {
-                foreach ($images as $imagePath) {
-                    $filePath = public_path($imagePath);
-
-                    if (file_exists($filePath)) {
-                        unlink($filePath);
-                    }
-                }
-
-                $directory = dirname(public_path($images[0]));
-
-                if (is_dir($directory) && count(scandir($directory)) === 2) {
-                    rmdir($directory);
-                }
-            }
-            $post->delete();
-            return response()->json([
-                'success' => true,
-                'message' => 'Item deleted successfully.',
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error deleting post: ' . $e->getMessage());
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to delete Item.',
-            ], 500);
-        }
-    }
-
 }

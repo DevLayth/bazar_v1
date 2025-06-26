@@ -49,7 +49,7 @@ Route::middleware('Admin-middleware')->group(function () {
         Route::get('/admin-posts/{id}', [PostController::class, 'show']);
         Route::post('/admin-posts', [PostController::class, 'store']);
         Route::put('/admin-posts/{id}', [PostController::class, 'update']);
-        Route::delete('/admin-posts/{id}', [PostController::class, 'destroy']);
+        Route::delete('/admin-posts/{post}', [PostController::class, 'destroy']);
         Route::put('/admin-posts/approve/{post}', [PostController::class, 'approvePost']);
 
         // User Managment

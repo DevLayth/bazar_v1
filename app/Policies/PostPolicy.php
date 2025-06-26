@@ -29,12 +29,6 @@ class PostPolicy
     }
 
 
-    public function reject(User $user): Response
-    {
-        return $user->admin == 1
-            ? Response::allow()
-            : Response::deny('Only admins can reject posts.');
-    }
 
     public function approve(User $user): Response
     {
