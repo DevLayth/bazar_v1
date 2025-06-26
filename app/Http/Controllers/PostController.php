@@ -329,13 +329,11 @@ public function approvePost(Request $request, Post $post)
 {
     $this->authorize('approve', $post);
 
-    // Update the post
     $post->update([
         'pending' => false,
         'approved_by' => Auth::id(),
     ]);
 
-    // Prepare consistent response
     $postData = [
         'id' => $post->id,
         'user_id' => $post->user->id,
