@@ -28,7 +28,15 @@ class PostPolicy
             : Response::deny('You do not own this post.');
     }
 
-    public function approve(User $user, Post $post): Response
+
+    public function reject(User $user): Response
+    {
+        return $user->admin == 1
+            ? Response::allow()
+            : Response::deny('Only admins can reject posts.');
+    }
+
+    public function approve(User $user): Response
     {
         return $user->admin == 1
             ? Response::allow()
