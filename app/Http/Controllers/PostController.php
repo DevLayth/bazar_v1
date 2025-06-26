@@ -267,41 +267,52 @@ class PostController extends Controller
         }
     }
 
-    public function destroy(Post $post)
-    {
-        try {
-            $this->authorize('delete', $post);
-            $images = json_decode($post->images, true);
+   public function destroy(Post $post)
+{
+    try {
+        $this->authorize('delete', $post);
 
-            if (is_array($images)) {
-                foreach ($images as $imagePath) {
+        $images = json_decode($post->images, true);
+
+        if (is_array($images) && !empty($images)) {
+            foreach ($images as $imagePath) {
+                // Optional: Ensure path is within expected directory
+                if (strpos($imagePath, 'uploads/posts/') === 0) {
                     $filePath = public_path($imagePath);
 
                     if (file_exists($filePath)) {
                         unlink($filePath);
                     }
                 }
+            }
 
-                $directory = dirname(public_path($images[0]));
+            // Attempt to delete directory if empty
+            $directory = dirname(public_path($images[0]));
 
-                if (is_dir($directory) && count(scandir($directory)) === 2) {
+            if (is_dir($directory)) {
+                $files = array_diff(scandir($directory), ['.', '..']);
+                if (empty($files)) {
                     rmdir($directory);
                 }
             }
-            $post->delete();
-            return response()->json([
-                'success' => true,
-                'message' => 'Item deleted successfully.',
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error deleting post: ' . $e->getMessage());
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to delete Item.',
-            ], 500);
         }
+
+        $post->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Item deleted successfully.',
+        ]);
+    } catch (\Exception $e) {
+        Log::error('Error deleting post: ' . $e->getMessage());
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to delete Item.',
+        ], 500);
     }
+}
+
 
     public function userPosts()
     {
