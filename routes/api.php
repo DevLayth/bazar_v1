@@ -52,8 +52,8 @@ Route::middleware('Admin-middleware')->group(function () {
         Route::delete('/admin-posts/{post}', [PostController::class, 'destroy']);
         Route::put('/admin-posts/approve/{post}', [PostController::class, 'approvePost']);
 
-        // User Managment
-        Route::get('/admin-users', [AuthController::class, 'getAllUsers']);
+        // Store Management
+        Route::get('/admin-stores', [AuthController::class, 'getAllStores']);
 
 
         // Category Management

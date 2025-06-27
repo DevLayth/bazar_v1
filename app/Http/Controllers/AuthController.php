@@ -207,7 +207,11 @@ public function adminLogin(Request $request)
                 'img' => $user->profile->img ?? null,
                 'phone' => $user->profile->phone ?? null,
                 'plan_id' => $planId,
-                'address' => $user->profile->address
+                'address' => $user->profile->address,
+                'posts_counter' => $posts,
+                'created_at' => $user->created_at,
+                'email_verified_at' => $user->email_verified_at,
+                
             ];
         });
     }
