@@ -192,7 +192,7 @@ public function adminLogin(Request $request)
     public function getAllStores()
     {
         $users = User::with(['profile', 'planSubscriptions'])
-            ->where('admin', 0)
+            ->where('admin', 0)->where('email_verified_at', '!=', null)
             ->get();
 
         return $users->map(function ($user) {
@@ -211,7 +211,7 @@ public function adminLogin(Request $request)
                 'posts_counter' => $posts,
                 'created_at' => $user->created_at,
                 'email_verified_at' => $user->email_verified_at,
-                
+
             ];
         });
     }
