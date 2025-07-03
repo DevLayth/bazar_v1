@@ -121,6 +121,6 @@ public function updateName(Request $request, $id)
 
         $category->delete();
 
-        return response()->json(['message' => 'Category deleted']);
+        return response()->json(['message' => 'Category deleted'], 200);
     }
 }
