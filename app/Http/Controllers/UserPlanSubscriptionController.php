@@ -34,4 +34,24 @@ class UserPlanSubscriptionController extends Controller
             'plan_id' => $plan_id
         ]);
     }
+
+
+    //change plan by user_id
+    public function changePlanByUserId($user_id, $plan_id) {
+        $subscription = UserPlanSubscription::where('user_id', $user_id)->first();
+        if (!$subscription) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No subscription found for this user'
+            ], 404);
+        }
+
+        $subscription->plan_id = $plan_id;
+        $subscription->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Subscription plan updated successfully'
+        ]);
+    }
 }
