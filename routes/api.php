@@ -12,8 +12,7 @@ use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ReklamSlideController;
 use App\Http\Controllers\InvoiceController;
-use App\Http\Controllers\userPlanSubscriptionController;
-
+use App\Http\Controllers\UserPlanSubscriptionController;
 
 
 // Public routes
