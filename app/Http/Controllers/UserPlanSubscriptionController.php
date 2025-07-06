@@ -52,6 +52,6 @@ class UserPlanSubscriptionController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Subscription plan updated successfully'
-        ]);
+        ],200);
     }
 }
