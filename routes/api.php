@@ -9,9 +9,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PlanController;
-    use App\Http\Controllers\PasswordResetController;
-    use App\Http\Controllers\ReklamSlideController;
+use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\ReklamSlideController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\userPlanSubscriptionController;
 
 
 
@@ -54,6 +55,7 @@ Route::middleware('Admin-middleware')->group(function () {
 
         // Store Management
         Route::get('/admin-stores', [AuthController::class, 'getAllStores']);
+        Route::post('/admin-stores/{userId}/set-plan/{planId}', [UserPlanSubscriptionController::class, 'setPlanByUserId']);
 
 
         // Category Management
@@ -65,7 +67,7 @@ Route::middleware('Admin-middleware')->group(function () {
 
 
 
-        
+
     });
 });
 
