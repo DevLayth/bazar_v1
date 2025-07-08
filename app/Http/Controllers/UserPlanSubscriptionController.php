@@ -36,7 +36,7 @@ class UserPlanSubscriptionController extends Controller
     }
 
 
-    //change plan by user_id
+ 
     public function changePlanByUserId($user_id, $plan_id) {
         $subscription = UserPlanSubscription::where('user_id', $user_id)->first();
         if (!$subscription) {
