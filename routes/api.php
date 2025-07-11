@@ -31,7 +31,6 @@ Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']
 Route::middleware('Admin-middleware')->group(function () {
 
     Route::post('/admin-reklam-slide', [ReklamSlideController::class, 'store']);
-    Route::get('/admin-reklam-slide', [ReklamSlideController::class, 'index']);
 
     Route::post('/admin-login', [AuthController::class, 'adminLogin'])->name('adminLogin');
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
@@ -64,6 +63,9 @@ Route::middleware('Admin-middleware')->group(function () {
         Route::put('/admin-categories-img/{id}', [CategoryController::class, 'updateImg']);
         Route::delete('/admin-categories/{id}', [CategoryController::class, 'destroy']);
 
+
+        // Reklam Slide Management
+        Route::get('/admin-reklam-slide', [ReklamSlideController::class, 'index']);
 
 
 
