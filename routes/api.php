@@ -22,6 +22,7 @@ Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify']
 
 Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']);
 
+Route::post('/upload/invoice', [InvoiceController::class, 'upload']);
 
 
 
@@ -30,7 +31,7 @@ Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']
 // Admin middleware
 Route::middleware('Admin-middleware')->group(function () {
 
-    Route::post('/admin-reklam-slide', [ReklamSlideController::class, 'store']);
+
 
     Route::post('/admin-login', [AuthController::class, 'adminLogin'])->name('adminLogin');
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
@@ -66,8 +67,10 @@ Route::middleware('Admin-middleware')->group(function () {
 
         // Reklam Slide Management
         Route::get('/admin-reklam-slide', [ReklamSlideController::class, 'index']);
-
-
+        Route::post('/admin-reklam-slide', [ReklamSlideController::class, 'store']);
+        Route::get('/admin-reklam-slide/{id}', [ReklamSlideController::class, 'show']);
+        Route::put('/admin-reklam-slide/{id}', [ReklamSlideController::class, 'update']);
+        Route::delete('/admin-reklam-slide/{id}', [ReklamSlideController::class, 'destroy']);
 
     });
 });
@@ -109,7 +112,6 @@ Route::middleware('User-middleware')->group(function () {
 
 
 
-        Route::post('/upload/invoice', [InvoiceController::class, 'upload']);
 
 
 
