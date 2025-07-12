@@ -72,15 +72,15 @@ public function updateImg(Request $request, $id)
         'image' => 'required|image',
     ]);
 
-    if ($category->image && file_exists(public_path($category->image))) {
-        unlink(public_path($category->image));
+    // Delete old image
+    if ($category->image && Storage::disk('public')->exists($category->image)) {
+        Storage::disk('public')->delete($category->image);
     }
 
-    $imageName = time() . '.' . $request->image->extension();
-    $request->image->move(public_path('images/categories'), $imageName);
-    $imagePath = 'images/categories/' . $imageName;
+    // Store new image
+    $imagePath = $request->file('image')->store('categories', 'public');
 
-    $category->image = $imagePath;
+    $category->image = 'storage/' . $imagePath;
     $category->save();
 
     return response()->json($category, 200);
