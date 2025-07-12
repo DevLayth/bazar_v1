@@ -69,7 +69,7 @@ public function updateImg(Request $request, $id)
     $category = Category::findOrFail($id);
 
     $request->validate([
-        'image' => 'required|image',
+        'image' => 'image',
     ]);
 
     // Delete old image
