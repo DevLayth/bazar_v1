@@ -30,7 +30,7 @@ Route::post('/upload/invoice', [InvoiceController::class, 'upload']);
 //----------------------------------------Admin EndPoints------------------------------------------------------
 // Admin middleware
 Route::middleware('Admin-middleware')->group(function () {
-    
+
     Route::post('/admin-login', [AuthController::class, 'adminLogin'])->name('adminLogin');
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/admin-logout', [AuthController::class, 'logout']);
@@ -59,7 +59,7 @@ Route::middleware('Admin-middleware')->group(function () {
         Route::get('/admin-categories', [CategoryController::class, 'index']);
         Route::post('/admin-categories', [CategoryController::class, 'store']);
         Route::put('/admin-categories-name/{id}', [CategoryController::class, 'updateName']);
-        Route::put('/admin-categories-img/{id}', [CategoryController::class, 'updateImg']);
+        Route::post('/admin-categories-img/{id}', [CategoryController::class, 'updateImg']);
         Route::delete('/admin-categories/{id}', [CategoryController::class, 'destroy']);
 
 
