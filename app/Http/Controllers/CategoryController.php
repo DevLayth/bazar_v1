@@ -69,18 +69,18 @@ public function updateImg(Request $request, $id)
     $category = Category::findOrFail($id);
 
     $request->validate([
-        'image' => 'image',
+        'image' => 'required|image',
     ]);
 
-    // Delete old image
-    if ($category->image && Storage::disk('public')->exists($category->image)) {
-        Storage::disk('public')->delete($category->image);
+    if ($category->image && file_exists(public_path($category->image))) {
+        unlink(public_path($category->image));
     }
 
-    // Store new image
-    $imagePath = $request->file('image')->store('categories', 'public');
+    $imageName = time() . '.' . $request->image->extension();
+    $request->image->move(public_path('images/categories'), $imageName);
+    $imagePath = 'images/categories/' . $imageName;
 
-    $category->image = 'storage/' . $imagePath;
+    $category->image = $imagePath;
     $category->save();
 
     return response()->json($category, 200);
