@@ -96,10 +96,14 @@ public function updateName(Request $request, $id)
     $category = Category::findOrFail($id);
 
     $request->validate([
-        'name' => 'required|string|max:255',
+        'nameKU' => 'required|string|max:255',
+        'nameEN' => 'required|string|max:255',
+        'nameAR' => 'required|string|max:255',
     ]);
 
-    $category->name=$request->name;
+    $category->nameKU = $request->nameKU;
+    $category->nameEN = $request->nameEN;
+    $category->nameAR = $request->nameAR;
     $category->save();
     return response()->json($category, 200);
 }

@@ -30,9 +30,7 @@ Route::post('/upload/invoice', [InvoiceController::class, 'upload']);
 //----------------------------------------Admin EndPoints------------------------------------------------------
 // Admin middleware
 Route::middleware('Admin-middleware')->group(function () {
-
-
-
+    
     Route::post('/admin-login', [AuthController::class, 'adminLogin'])->name('adminLogin');
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/admin-logout', [AuthController::class, 'logout']);
