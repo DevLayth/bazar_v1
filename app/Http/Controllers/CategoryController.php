@@ -64,13 +64,12 @@ class CategoryController extends Controller
 
 
 // Update an existing category image
-public function updateImg(Request $request)
+public function updateImg(Request $request, $id)
 {
-    $category = Category::findOrFail($request->id);
+    $category = Category::findOrFail($id);
 
     $request->validate([
         'image' => 'required|image',
-        'id'=> 'required|integer'
     ]);
 
     if ($category->image && file_exists(public_path($category->image))) {
