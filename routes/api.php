@@ -70,6 +70,7 @@ Route::middleware('Admin-middleware')->group(function () {
         Route::put('/admin-reklam-slide/{id}', [ReklamSlideController::class, 'update']);
         Route::delete('/admin-reklam-slide/{id}', [ReklamSlideController::class, 'destroy']);
 
+        
     });
 });
 
