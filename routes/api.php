@@ -56,7 +56,7 @@ Route::middleware('Admin-middleware')->group(function () {
 
 
         // Category Management
-        Route::get('/admin-categories', [CategoryController::class, 'index']);
+        //Route::get('/admin-categories', [CategoryController::class, 'index']);
         Route::post('/admin-categories', [CategoryController::class, 'store']);
         Route::put('/admin-categories-name/{id}', [CategoryController::class, 'updateName']);
         Route::post('/admin-categories-img/{id}', [CategoryController::class, 'updateImg']);
@@ -69,8 +69,6 @@ Route::middleware('Admin-middleware')->group(function () {
         Route::get('/admin-reklam-slide/{id}', [ReklamSlideController::class, 'show']);
         Route::put('/admin-reklam-slide/{id}', [ReklamSlideController::class, 'update']);
         Route::delete('/admin-reklam-slide/{id}', [ReklamSlideController::class, 'destroy']);
-
-        
     });
 });
 
