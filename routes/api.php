@@ -56,7 +56,7 @@ Route::middleware('Admin-middleware')->group(function () {
 
 
         // Category Management
-        //Route::get('/admin-categories', [CategoryController::class, 'index']);
+        Route::get('/admin-categories', [CategoryController::class, 'index']);
         Route::post('/admin-categories', [CategoryController::class, 'store']);
         Route::put('/admin-categories-name/{id}', [CategoryController::class, 'updateName']);
         Route::post('/admin-categories-img/{id}', [CategoryController::class, 'updateImg']);
