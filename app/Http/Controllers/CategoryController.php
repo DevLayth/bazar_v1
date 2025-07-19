@@ -10,11 +10,15 @@ class CategoryController extends Controller
 
 
 
-    public function index()
-    {
-        $categories = Category::select('id', 'nameEN','nameKU','nameAR', 'image')->get();
-        return response()->json($categories);
-    }
+ public function index()
+{
+    $categories = Category::with('children')
+        ->whereNull('parent_id')
+        ->select('id', 'nameEN', 'nameKU', 'nameAR', 'image', 'parent_id')
+        ->get();
+
+    return response()->json($categories);
+}
 
 
 
@@ -38,6 +42,7 @@ class CategoryController extends Controller
             'nameKU' => 'required|string|max:255',
             'nameAR' => 'required|string|max:255',
             'image' => 'required|image',
+            'parent_id' => 'nullable|exists:categories,id',
         ]);
 
         $imagePath = null;
@@ -52,6 +57,7 @@ class CategoryController extends Controller
             'nameKU' => $request->nameKU,
             'nameAR' => $request->nameAR,
             'image' => $imagePath,
+            'parent_id' => $request->parent_id,
         ]);
 
         return response()->json($category, 201);
