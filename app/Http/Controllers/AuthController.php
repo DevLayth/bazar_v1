@@ -38,6 +38,8 @@ class AuthController extends Controller
             'address' => $request->address ?? null,
             'phone' => $request->phone ?? null,
             'img' => 'image.png',
+            'latitude' => $request->latitude ?? null,
+            'longitude' => $request->longitude ?? null,
         ]);
 
         $token = $user->createToken($request->name);

@@ -16,8 +16,8 @@ class Profile extends Model
         'phone',
         'phone_otp',
         'img',
-   
-
+        'latitude',
+        'longitude',
     ];
 
     // Define relationships

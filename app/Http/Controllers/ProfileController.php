@@ -20,6 +20,8 @@ class ProfileController extends Controller
             'address' => 'nullable|string',
             'phone' => 'nullable|string',
             'img' => 'nullable|string',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
 
         ]);
 
@@ -39,6 +41,8 @@ class ProfileController extends Controller
             'type' => 'nullable|string',
             'address' => 'nullable|string',
             'phone' => 'nullable|string',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
 
 
         ]);
@@ -67,6 +71,8 @@ class ProfileController extends Controller
         'type' => 'nullable|string',
         'address' => 'nullable|string',
         'phone' => 'nullable|string',
+        'latitude' => 'nullable|numeric',
+        'longitude' => 'nullable|numeric',
      ]);
 
         if ($request->has('name')) {
@@ -74,7 +80,7 @@ class ProfileController extends Controller
         $user->save();
          }
 
-         $profileData = $request->only(['type', 'address', 'phone']);
+         $profileData = $request->only(['type', 'address', 'phone', 'latitude', 'longitude']);
          $profile->update($profileData);
 
        return response()->json([
