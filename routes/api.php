@@ -13,6 +13,7 @@ use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ReklamSlideController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\UserPlanSubscriptionController;
+use App\Http\Controllers\AddressController;
 
 
 // Public routes
@@ -84,6 +85,8 @@ Route::middleware('User-middleware')->group(function () {
     Route::get('all-posts', [PostController::class, 'index']);
     Route::get('/all-users', [AuthController::class, 'getAllStores']);
     Route::get('/reklam-slide', [ReklamSlideController::class, 'index']);
+    Route::get('/address', [AddressController::class, 'getCitiesWithAreas']);
+
 
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('/user', function (Request $request) {
