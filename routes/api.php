@@ -70,6 +70,10 @@ Route::middleware('Admin-middleware')->group(function () {
         Route::get('/admin-reklam-slide/{id}', [ReklamSlideController::class, 'show']);
         Route::put('/admin-reklam-slide/{id}', [ReklamSlideController::class, 'update']);
         Route::delete('/admin-reklam-slide/{id}', [ReklamSlideController::class, 'destroy']);
+
+        // Address Management
+        Route::get('/admin-address', [AddressController::class, 'getCitiesWithAreas']);
+        Route::post('/admin-address', [AddressController::class, 'store']);
     });
 });
 
