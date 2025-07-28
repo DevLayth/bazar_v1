@@ -74,6 +74,8 @@ Route::middleware('Admin-middleware')->group(function () {
         // Address Management
         Route::get('/admin-address', [AddressController::class, 'getCitiesWithAreas']);
         Route::post('/admin-address', [AddressController::class, 'store']);
+        Route::put('/admin-address/{id}', [AddressController::class, 'update']);
+        Route::delete('/admin-address/{id}', [AddressController::class, 'destroy']);
     });
 });
 

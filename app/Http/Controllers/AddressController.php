@@ -14,7 +14,7 @@ class AddressController extends Controller
         return response()->json($cities);
     }
 
-    //store a new address
+    // store a new address
     public function store(Request $request)
     {
         $request->validate([
@@ -28,4 +28,19 @@ class AddressController extends Controller
         return response()->json($address, 201);
     }
 
+    // Update an existing address
+    public function update(Request $request, $id)
+    {
+        $address = Address::findOrFail($id);
+        $address->update($request->all());
+        return response()->json($address);
+    }
+
+    // Delete an address
+    public function destroy($id)
+    {
+        $address = Address::findOrFail($id);
+        $address->delete();
+        return response()->json(null, 204);
+    }
 }
