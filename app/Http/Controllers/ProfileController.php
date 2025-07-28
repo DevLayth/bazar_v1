@@ -22,6 +22,8 @@ class ProfileController extends Controller
             'img' => 'nullable|string',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
+            'address_1' => 'nullable|exists:addresses,id',
+            'address_2' => 'nullable|exists:addresses,id',
 
         ]);
 
@@ -43,6 +45,8 @@ class ProfileController extends Controller
             'phone' => 'nullable|string',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
+            'address_1' => 'nullable|exists:addresses,id',
+            'address_2' => 'nullable|exists:addresses,id',
 
 
         ]);
@@ -73,6 +77,8 @@ class ProfileController extends Controller
         'phone' => 'nullable|string',
         'latitude' => 'nullable|numeric',
         'longitude' => 'nullable|numeric',
+        'address_1' => 'nullable|exists:addresses,id',
+        'address_2' => 'nullable|exists:addresses,id',
      ]);
 
         if ($request->has('name')) {

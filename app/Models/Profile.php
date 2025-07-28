@@ -18,6 +18,8 @@ class Profile extends Model
         'img',
         'latitude',
         'longitude',
+        'address_1', 
+        'address_2',
     ];
 
     // Define relationships
