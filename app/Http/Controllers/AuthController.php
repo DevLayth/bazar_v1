@@ -40,6 +40,8 @@ class AuthController extends Controller
             'img' => 'image.png',
             'latitude' => $request->latitude ?? null,
             'longitude' => $request->longitude ?? null,
+            'address_1' => $request->address_1 ?? null,
+            'address_2' => $request->address_2 ?? null,
         ]);
 
         $token = $user->createToken($request->name);
@@ -186,7 +188,9 @@ public function adminLogin(Request $request)
                 'img' => $user->profile->img,
                 'phone' => $user->profile->phone,
                 'plan_id' => $planId,
-                'posts_counter' => $posts
+                'posts_counter' => $posts,
+                'address_1' => $user->profile->address1,
+                'address_2' => $user->profile->address2
             ];
         });
     }
@@ -213,6 +217,8 @@ public function adminLogin(Request $request)
                 'posts_counter' => $posts,
                 'created_at' => $user->created_at,
                 'email_verified_at' => $user->email_verified_at,
+                'address_1' => $user->profile->address1,
+                'address_2' => $user->profile->address2,
 
             ];
         });
