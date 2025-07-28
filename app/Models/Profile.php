@@ -25,4 +25,15 @@ class Profile extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function address1()
+{
+    return $this->belongsTo(Address::class, 'address_1');
+}
+
+public function address2()
+{
+    return $this->belongsTo(Address::class, 'address_2');
+}
+
 }
