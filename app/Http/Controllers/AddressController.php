@@ -33,7 +33,7 @@ class AddressController extends Controller
     {
         $address = Address::findOrFail($id);
         $address->update($request->all());
-        return response()->json($address);
+        return response()->json($address, 200);
     }
 
     // Delete an address
@@ -41,6 +41,6 @@ class AddressController extends Controller
     {
         $address = Address::findOrFail($id);
         $address->delete();
-        return response()->json(null, 204);
+        return response()->json(['success' => true], 204);
     }
 }
