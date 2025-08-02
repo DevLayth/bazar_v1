@@ -10,9 +10,13 @@ class CreateDeviceTokensTable extends Migration
     {
         Schema::create('device_tokens', function (Blueprint $table) {
             $table->id();
-            $table->string('token')->unique();
-            $table->string('device_type')->nullable(); 
-            $table->morphs('owner'); // will create owner_id and owner_type (e.g. User, Admin)
+            $table
+                ->foreignId('user_id')
+                ->nullable()
+                ->constrained('users')
+                ->onDelete('cascade');
+            $table->string('token');
+            $table->string('device_type')->nullable();  // android / ios / web
             $table->timestamps();
         });
     }
@@ -22,4 +26,3 @@ class CreateDeviceTokensTable extends Migration
         Schema::dropIfExists('device_tokens');
     }
 }
-
