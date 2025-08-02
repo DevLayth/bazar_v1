@@ -25,14 +25,13 @@ Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']
 
 Route::post('/upload/invoice', [InvoiceController::class, 'upload']);
 
-Route::post('/device-tokens', [DeviceTokenController::class, 'storeOrUpdateToken']);
+// Route::post('/device-tokens', [DeviceTokenController::class, 'storeOrUpdateToken']);
 
 
 
 //----------------------------------------Admin EndPoints------------------------------------------------------
 // Admin middleware
 Route::middleware('Admin-middleware')->group(function () {
-
     Route::post('/admin-login', [AuthController::class, 'adminLogin'])->name('adminLogin');
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/admin-logout', [AuthController::class, 'logout']);
@@ -78,6 +77,7 @@ Route::middleware('Admin-middleware')->group(function () {
         Route::put('/admin-address/{id}', [AddressController::class, 'update']);
         Route::delete('/admin-address/{id}', [AddressController::class, 'destroy']);
 
+
     });
 });
 
@@ -94,6 +94,7 @@ Route::middleware('User-middleware')->group(function () {
     Route::get('/all-users', [AuthController::class, 'getAllStores']);
     Route::get('/reklam-slide', [ReklamSlideController::class, 'index']);
     Route::get('/address', [AddressController::class, 'getCitiesWithAreas']);
+    Route::post('/device-tokens', [DeviceTokenController::class, 'storeOrUpdateToken']);
 
 
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
