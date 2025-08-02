@@ -78,6 +78,10 @@ Route::middleware('Admin-middleware')->group(function () {
         Route::put('/admin-address/{id}', [AddressController::class, 'update']);
         Route::delete('/admin-address/{id}', [AddressController::class, 'destroy']);
 
+        //Device Token Management
+        Route::get('/admin-device-tokens', [DeviceTokensController::class, 'index']);
+        Route::post('/admin-device-tokens', [DeviceTokensController::class, 'storeOrUpdateToken']);
+        Route::delete('/admin-device-tokens', [DeviceTokensController::class, 'destroy']);
 
     });
 });
@@ -95,7 +99,7 @@ Route::middleware('User-middleware')->group(function () {
     Route::get('/all-users', [AuthController::class, 'getAllStores']);
     Route::get('/reklam-slide', [ReklamSlideController::class, 'index']);
     Route::get('/address', [AddressController::class, 'getCitiesWithAreas']);
-    Route::post('/device-tokens', [DeviceTokensController::class, 'storeOrUpdateToken']);
+    Route::post('/device-tokens/guest', [DeviceTokensController::class, 'storeOrUpdateToken']);
 
 
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
@@ -116,7 +120,9 @@ Route::middleware('User-middleware')->group(function () {
         Route::delete('posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
         Route::put('posts/{post}', [PostController::class, 'update'])->name('posts.update');
 
-
+        // Device Token routes
+        Route::post('/device-tokens', [DeviceTokensController::class, 'storeOrUpdateToken']);
+        Route::delete('/device-tokens', [DeviceTokensController::class, 'destroy']);
     });
 });
 
