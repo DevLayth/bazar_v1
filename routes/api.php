@@ -15,7 +15,6 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\UserPlanSubscriptionController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\DeviceTokensController;
-use App\Http\Controllers\FirebaseNotifyController;
 
 
 
@@ -28,7 +27,6 @@ Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']
 
 Route::post('/upload/invoice', [InvoiceController::class, 'upload']);
 
-Route::post('/notify', [FirebaseNotifyController::class, 'sendPush']);
 
 
 
