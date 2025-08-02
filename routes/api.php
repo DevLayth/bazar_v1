@@ -25,6 +25,7 @@ Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']
 
 Route::post('/upload/invoice', [InvoiceController::class, 'upload']);
 
+Route::post('/device-tokens', [DeviceTokenController::class, 'storeOrUpdateToken']);
 
 
 
@@ -76,6 +77,7 @@ Route::middleware('Admin-middleware')->group(function () {
         Route::post('/admin-address', [AddressController::class, 'store']);
         Route::put('/admin-address/{id}', [AddressController::class, 'update']);
         Route::delete('/admin-address/{id}', [AddressController::class, 'destroy']);
+
     });
 });
 
