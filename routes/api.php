@@ -14,6 +14,7 @@ use App\Http\Controllers\ReklamSlideController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\UserPlanSubscriptionController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\DeviceTokenController;
 
 
 // Public routes
