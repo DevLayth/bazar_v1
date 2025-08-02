@@ -95,7 +95,7 @@ Route::middleware('User-middleware')->group(function () {
     Route::get('/all-users', [AuthController::class, 'getAllStores']);
     Route::get('/reklam-slide', [ReklamSlideController::class, 'index']);
     Route::get('/address', [AddressController::class, 'getCitiesWithAreas']);
-    Route::post('/device-tokens', [DeviceTokensController::class, 'storeOrUpdateToken']);
+    Route::post('/device-tokens', [DeviceTokenController::class, 'storeOrUpdateToken']);
 
 
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
