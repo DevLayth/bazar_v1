@@ -6,7 +6,7 @@ use App\Models\DeviceToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class DeviceTokensController extends Controller
+class DeviceTokenController extends Controller
 {
    public function storeOrUpdateToken(Request $request)
 {
