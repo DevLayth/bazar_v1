@@ -14,7 +14,7 @@ use App\Http\Controllers\ReklamSlideController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\UserPlanSubscriptionController;
 use App\Http\Controllers\AddressController;
-use App\Http\Controllers\DeviceTokenController;
+use App\Http\Controllers\DeviceTokensController;
 
 
 
@@ -27,7 +27,6 @@ Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']
 
 Route::post('/upload/invoice', [InvoiceController::class, 'upload']);
 
-// Route::post('/device-tokens', [DeviceTokenController::class, 'storeOrUpdateToken']);
 
 
 
