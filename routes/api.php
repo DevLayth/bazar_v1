@@ -17,6 +17,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\DeviceTokenController;
 
 
+
 // Public routes
 Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
     ->middleware(['signed'])
