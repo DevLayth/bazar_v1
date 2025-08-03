@@ -20,6 +20,7 @@ class DeviceTokensController extends Controller{
     $request->validate([
         'token' => 'required|string',
         'device_type' => 'nullable|string|in:android,ios,web',
+        'language' => 'nullable|integer',
     ]);
 
     $userId = Auth::id();
@@ -30,6 +31,7 @@ class DeviceTokensController extends Controller{
             ->update([
                 'user_id' => $userId,
                 'device_type' => $request->device_type,
+                'language' => $request->language,
                 'updated_at' => now(),
             ]);
 
@@ -38,6 +40,7 @@ class DeviceTokensController extends Controller{
                 ['token' => $request->token],
                 [
                     'user_id' => $userId,
+                    'language' => $request->language,
                     'device_type' => $request->device_type,
                 ]
             );
@@ -47,6 +50,7 @@ class DeviceTokensController extends Controller{
             ['token' => $request->token],
             [
                 'user_id' => null,
+                'language' => $request->language,
                 'device_type' => $request->device_type,
             ]
         );
