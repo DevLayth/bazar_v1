@@ -28,14 +28,14 @@ class FirebaseController extends Controller
 {
     $target = $request->input('target');
     $titles = [
-        'en' => $request->input('en_title', 'Default English Title'),
-        'ar' => $request->input('ar_title', 'Default Arabic Title'),
-        'ku' => $request->input('ku_title', 'Default Kurdish Title'),
+        1 => $request->input('en_title', 'Default EN Title'),
+        2 => $request->input('ar_title', 'Default AR Title'),
+        3 => $request->input('ku_title', 'Default KU Title'),
     ];
     $bodies = [
-        'en' => $request->input('en_body', 'Default English Body'),
-        'ar' => $request->input('ar_body', 'Default Arabic Body'),
-        'ku' => $request->input('ku_body', 'Default Kurdish Body'),
+        1 => $request->input('en_body', 'Default EN Body'),
+        2 => $request->input('ar_body', 'Default AR Body'),
+        3 => $request->input('ku_body', 'Default KU Body'),
     ];
     $imgURL = $request->input('img_url', 'https://bazzarv1.newstepiq.com/images/image.png');
 
@@ -67,10 +67,9 @@ class FirebaseController extends Controller
 
     foreach ($devices as $device) {
         try {
-            $lang = in_array($device->language, ['en', 'ar', 'ku']) ? $device->language : 'en';
-
-            $title = $titles[$lang] ?? $titles['en'];
-            $body = $bodies[$lang] ?? $bodies['en'];
+            $language = $device->language ?? 1; // default to EN if null
+            $title = $titles[$language] ?? $titles[1];
+            $body = $bodies[$language] ?? $bodies[1];
 
             $firebase->sendNotification($device->token, $title, $body, $imgURL);
 
@@ -92,5 +91,6 @@ class FirebaseController extends Controller
         'failed' => $failed
     ]);
 }
+
 
 }
