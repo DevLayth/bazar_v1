@@ -17,46 +17,50 @@ class DeviceTokensController extends Controller
 
    public function storeOrUpdateToken(Request $request)
 {
-    $request->validate([
-        'token' => 'required|string',
-        'device_type' => 'nullable|string|in:android,ios,web',
-        'language' => 'required|integer',
+    // Validate incoming request
+    $validated = $request->validate([
+        'token' => ['required', 'string'],
+        'device_type' => ['nullable', 'string', 'in:android,ios,web'],
+        'language' => ['required', 'integer', 'between:0,255'],
     ]);
 
     $userId = Auth::id();
 
     if ($userId) {
-        $updated = DeviceToken::where('token', $request->token)
+        // Try to claim an existing token without user_id
+        $updated = DeviceToken::where('token', $validated['token'])
             ->whereNull('user_id')
             ->update([
                 'user_id' => $userId,
-                'device_type' => $request->device_type,
-                'language' => $request->language,
+                'device_type' => $validated['device_type'] ?? null,
+                'language' => $validated['language'],
                 'updated_at' => now(),
             ]);
 
         if ($updated === 0) {
+            // Either no such token or already assigned: update or create user token
             DeviceToken::updateOrCreate(
                 [
-                    'token' => $request->token,
+                    'token' => $validated['token'],
                     'user_id' => $userId,
                 ],
                 [
-                    'device_type' => $request->device_type,
-                    'language' => $request->language,
+                    'device_type' => $validated['device_type'] ?? null,
+                    'language' => $validated['language'],
                     'updated_at' => now(),
                 ]
             );
         }
     } else {
+        // Guest device (no user_id)
         DeviceToken::firstOrCreate(
             [
-                'token' => $request->token,
+                'token' => $validated['token'],
                 'user_id' => null,
-                'device_type' => $request->device_type,
+                'device_type' => $validated['device_type'] ?? null,
             ],
             [
-                'language' => $request->language,
+                'language' => $validated['language'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ]
@@ -65,8 +69,9 @@ class DeviceTokensController extends Controller
 
     return response()->json([
         'message' => 'Device token saved or updated successfully.',
-    ]);
+    ], 200);
 }
+
 
 
 
