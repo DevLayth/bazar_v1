@@ -15,6 +15,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\UserPlanSubscriptionController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\DeviceTokensController;
+use App\Http\Controllers\FirebaseController;
 
 
 
@@ -27,8 +28,8 @@ Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']
 
 Route::post('/upload/invoice', [InvoiceController::class, 'upload']);
 
-
-
+//send notification to device
+Route::post('/send-notification', [FirebaseController::class, 'sendToDevice'])->name('sendNotification');
 
 //----------------------------------------Admin EndPoints------------------------------------------------------
 // Admin middleware
