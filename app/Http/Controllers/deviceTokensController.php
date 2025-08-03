@@ -15,52 +15,62 @@ class DeviceTokensController extends Controller
         return response()->json($deviceTokens);
     }
 
-    public function storeOrUpdateToken(Request $request)
-    {
-        $request->validate([
-            'token' => 'required|string',
-            'device_type' => 'nullable|string|in:android,ios,web',
-            'language' => 'nullable|integer',
-        ]);
+   public function storeOrUpdateToken(Request $request)
+{
+    $request->validate([
+        'token' => 'required|string',
+        'device_type' => 'nullable|string|in:android,ios,web',
+        'language' => 'nullable|integer',
+    ]);
 
-        $userId = Auth::id();
+    $userId = Auth::id();
 
-        if ($userId) {
-            $updated = DeviceToken::where('token', $request->token)
-                ->whereNull('user_id')
-                ->update([
+    if ($userId) {
+        // Try to assign this token to the current user if it's not assigned yet
+        $updated = DeviceToken::where('token', $request->token)
+            ->whereNull('user_id')
+            ->update([
+                'user_id' => $userId,
+                'device_type' => $request->device_type,
+                'language' => $request->language,
+                'updated_at' => now(),
+            ]);
+
+        if ($updated === 0) {
+            // No unclaimed token was updated, create or update a record with user_id
+            DeviceToken::updateOrCreate(
+                [
+                    'token' => $request->token,
                     'user_id' => $userId,
+                ],
+                [
                     'device_type' => $request->device_type,
                     'language' => $request->language,
                     'updated_at' => now(),
-                ]);
-
-            if ($updated === 0) {
-                DeviceToken::updateOrCreate(
-                    [
-                        'token' => $request->token,
-                        'user_id' => $userId,
-                        'device_type' => $request->device_type,
-                        'language' => $request->language,
-                        'updated_at' => now(),
-                    ],
-                );
-            }
-        } else {
-            DeviceToken::firstOrCreate(
-                [
-                    'token' => $request->token,
-                    'user_id' => null,
-                    'language' => $request->language,
-                    'device_type' => $request->device_type,
-                ],
+                ]
             );
         }
-
-        return response()->json([
-            'message' => 'Device token saved or updated successfully.',
-        ]);
+    } else {
+        // Guest user, store token without user_id
+        DeviceToken::firstOrCreate(
+            [
+                'token' => $request->token,
+                'user_id' => null,
+            ],
+            [
+                'device_type' => $request->device_type,
+                'language' => $request->language,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
     }
+
+    return response()->json([
+        'message' => 'Device token saved or updated successfully.',
+    ]);
+}
+
 
     public function destroy(Request $request)
     {
