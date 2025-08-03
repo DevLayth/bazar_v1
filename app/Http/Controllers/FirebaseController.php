@@ -24,9 +24,10 @@ class FirebaseController extends Controller
         }
     }
 
-   public function sendToMultipleDevices(Request $request, FirebaseService $firebase)
+public function sendToMultipleDevices(Request $request, FirebaseService $firebase)
 {
     $target = $request->input('target');
+
     $titles = [
         1 => $request->input('en_title', 'Default EN Title'),
         2 => $request->input('ar_title', 'Default AR Title'),
@@ -37,10 +38,18 @@ class FirebaseController extends Controller
         2 => $request->input('ar_body', 'Default AR Body'),
         3 => $request->input('ku_body', 'Default KU Body'),
     ];
-    $imgURL = $request->input('img_url', 'https://bazzarv1.newstepiq.com/images/image.png');
 
+    // Handle image upload
+    $imgURL = 'https://bazzarv1.newstepiq.com/images/image.png'; // default
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('images/FCM'), $filename);
+        $imgURL = asset('images/FCM/' . $filename);
+    }
+
+    // Fetch target devices
     $devices = collect();
-
     if ($target == 1) {
         $devices = DB::table('device_tokens')
             ->join('users', 'device_tokens.user_id', '=', 'users.id')
@@ -67,7 +76,7 @@ class FirebaseController extends Controller
 
     foreach ($devices as $device) {
         try {
-            $language = $device->language ?? 1; // default to EN if null
+            $language = $device->language ?? 1;
             $title = $titles[$language] ?? $titles[1];
             $body = $bodies[$language] ?? $bodies[1];
 
@@ -91,6 +100,7 @@ class FirebaseController extends Controller
         'failed' => $failed
     ]);
 }
+
 
 
 }
