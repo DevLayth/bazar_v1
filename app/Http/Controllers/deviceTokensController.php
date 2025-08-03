@@ -15,7 +15,7 @@ class DeviceTokensController extends Controller
         return response()->json($deviceTokens);
     }
 
-  public function storeOrUpdateToken(Request $request)
+public function storeOrUpdateToken(Request $request)
 {
     $validated = $request->validate([
         'token' => ['required', 'string'],
@@ -25,35 +25,32 @@ class DeviceTokensController extends Controller
 
     $userId = Auth::id();
 
-    DeviceToken::updateOrCreate(
-        ['token' => $validated['token']],
-        [
+    // Check if the token already exists
+    $deviceToken = DeviceToken::where('token', $validated['token'])->first();
+
+    if ($deviceToken) {
+        // Update existing token
+        $deviceToken->update([
             'user_id' => $userId,
             'device_type' => $validated['device_type'] ?? null,
             'language' => $validated['language'],
             'updated_at' => now(),
-        ]
-    );
+        ]);
+    } else {
+        // Create new token
+        DeviceToken::create([
+            'token' => $validated['token'],
+            'user_id' => $userId,
+            'device_type' => $validated['device_type'] ?? null,
+            'language' => $validated['language'],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
 
     return response()->json([
         'message' => 'Device token saved or updated successfully.',
     ], 200);
 }
 
-
-
-
-
-    public function destroy(Request $request)
-    {
-        $request->validate([
-            'token' => 'required|string',
-        ]);
-
-        $deleted = DeviceToken::where('token', $request->token)->delete();
-
-        return response()->json([
-            'message' => $deleted ? 'Token removed.' : 'Token not found.',
-        ]);
-    }
 }
