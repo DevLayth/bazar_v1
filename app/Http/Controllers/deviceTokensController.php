@@ -26,7 +26,6 @@ class DeviceTokensController extends Controller
     $userId = Auth::id();
 
     if ($userId) {
-        // Try to assign this token to the current user if it's not assigned yet
         $updated = DeviceToken::where('token', $request->token)
             ->whereNull('user_id')
             ->update([
@@ -37,7 +36,6 @@ class DeviceTokensController extends Controller
             ]);
 
         if ($updated === 0) {
-            // No unclaimed token was updated, create or update a record with user_id
             DeviceToken::updateOrCreate(
                 [
                     'token' => $request->token,
@@ -51,15 +49,14 @@ class DeviceTokensController extends Controller
             );
         }
     } else {
-        // Guest user, store token without user_id
         DeviceToken::firstOrCreate(
             [
                 'token' => $request->token,
                 'user_id' => null,
-                'language' => $request->language,
                 'device_type' => $request->device_type,
             ],
             [
+                'language' => $request->language,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]
@@ -70,6 +67,7 @@ class DeviceTokensController extends Controller
         'message' => 'Device token saved or updated successfully.',
     ]);
 }
+
 
 
     public function destroy(Request $request)
