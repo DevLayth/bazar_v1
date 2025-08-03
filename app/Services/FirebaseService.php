@@ -16,11 +16,36 @@ class FirebaseService
         $this->messaging = $factory->createMessaging();
     }
 
-    public function sendNotification(string $deviceToken, string $title, string $body,$imgURL)
-    {
-        $message = CloudMessage::withTarget('token', $deviceToken)
-            ->withNotification(Notification::create($title, $body)->withImage($imgURL));
+    public function sendNotification(string $deviceToken, string $title, string $body, string $imgURL)
+{
+    $message = CloudMessage::fromArray([
+        'token' => $deviceToken,
+        'notification' => [
+            'title' => $title,
+            'body' => $body,
+            'image' => $imgURL, 
+        ],
+        'android' => [
+            'notification' => [
+                'image' => $imgURL,
+            ],
+        ],
+        'apns' => [
+            'payload' => [
+                'aps' => [
+                    'mutable-content' => 1,
+                    'alert' => [
+                        'title' => $title,
+                        'body' => $body,
+                    ],
+                ],
+            ],
+            'fcm_options' => [
+                'image' => $imgURL,
+            ],
+        ],
+    ]);
 
-        return $this->messaging->send($message);
-    }
+    return $this->messaging->send($message);
+}
 }
