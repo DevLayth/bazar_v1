@@ -6,9 +6,9 @@ use App\Models\DeviceToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class DeviceTokensController extends Controller{
-
-    //index method to get all device tokens
+class DeviceTokensController extends Controller
+{
+    // index method to get all device tokens
     public function getAll()
     {
         $deviceTokens = DeviceToken::all();
@@ -16,51 +16,51 @@ class DeviceTokensController extends Controller{
     }
 
     public function storeOrUpdateToken(Request $request)
-{
-    $request->validate([
-        'token' => 'required|string',
-        'device_type' => 'nullable|string|in:android,ios,web',
-        'language' => 'nullable|integer',
-    ]);
+    {
+        $request->validate([
+            'token' => 'required|string',
+            'device_type' => 'nullable|string|in:android,ios,web',
+            'language' => 'nullable|integer',
+        ]);
 
-    $userId = Auth::id();
+        $userId = Auth::id();
 
-    if ($userId) {
-        $updated = DeviceToken::where('token', $request->token)
-            ->whereNull('user_id')
-            ->update([
-                'user_id' => $userId,
-                'device_type' => $request->device_type,
-                'language' => $request->language,
-                'updated_at' => now(),
-            ]);
+        if ($userId) {
+            $updated = DeviceToken::where('token', $request->token)
+                ->whereNull('user_id')
+                ->update([
+                    'user_id' => $userId,
+                    'device_type' => $request->device_type,
+                    'language' => $request->language,
+                    'updated_at' => now(),
+                ]);
 
-        if ($updated === 0) {
-            DeviceToken::updateOrCreate(
+            if ($updated === 0) {
+                DeviceToken::updateOrCreate(
+                    [
+                        'token' => $request->token,
+                        'user_id' => $userId,
+                        'device_type' => $request->device_type,
+                        'language' => $request->language,
+                        'updated_at' => now(),
+                    ],
+                );
+            }
+        } else {
+            DeviceToken::firstOrCreate(
                 ['token' => $request->token],
                 [
-                    'user_id' => $userId,
+                    'user_id' => null,
                     'language' => $request->language,
                     'device_type' => $request->device_type,
                 ]
             );
         }
-    } else {
-        DeviceToken::firstOrCreate(
-            ['token' => $request->token],
-            [
-                'user_id' => null,
-                'language' => $request->language,
-                'device_type' => $request->device_type,
-            ]
-        );
+
+        return response()->json([
+            'message' => 'Device token saved or updated successfully.',
+        ]);
     }
-
-    return response()->json([
-        'message' => 'Device token saved or updated successfully.',
-    ]);
-}
-
 
     public function destroy(Request $request)
     {
@@ -74,7 +74,4 @@ class DeviceTokensController extends Controller{
             'message' => $deleted ? 'Token removed.' : 'Token not found.',
         ]);
     }
-
-
-
 }
