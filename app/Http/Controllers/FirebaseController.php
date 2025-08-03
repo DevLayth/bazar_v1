@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DeviceToken;
 use App\Services\FirebaseService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FirebaseController extends Controller
 {
@@ -15,10 +17,46 @@ class FirebaseController extends Controller
         $imgURL = 'https://bazzarv1.newstepiq.com/images/image.png';
 
         try {
-            $firebase->sendNotification($deviceToken, $title, $body,$imgURL);
+            $firebase->sendNotification($deviceToken, $title, $body, $imgURL);
             return response()->json(['message' => 'Notification sent']);
         } catch (\Throwable $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+
+    // send notification to multiple devices tokens from database admin users only
+    public function sendToMultipleDevices(Request $request, FirebaseService $firebase)
+    {
+        $adminDevices = DB::table('device_tokens')
+            ->join('users', 'device_tokens.user_id', '=', 'users.id')
+            ->where('users.admin', 1)
+            ->select('device_tokens.user_id', 'device_tokens.token')
+            ->get();
+
+        $title = $request->input('title', 'Default Title');
+        $body = $request->input('body', 'Default Body');
+        $imgURL = $request->input('img_url', 'https://bazzarv1.newstepiq.com/images/image.png');
+
+        $successfulUserIds = [];
+        $failed = [];
+
+        foreach ($adminDevices as $device) {
+            try {
+                $firebase->sendNotification($device->token, $title, $body, $imgURL);
+                $successfulUserIds[] = $device->user_id;
+            } catch (\Throwable $e) {
+                $failed[] = [
+                    'user_id' => $device->user_id,
+                    'token' => $device->token,
+                    'error' => $e->getMessage()
+                ];
+            }
+        }
+
+        return response()->json([
+            'message' => 'Notifications sent',
+            'notified_user_ids' => $successfulUserIds,
+            'failed' => $failed
+        ]);
     }
 }

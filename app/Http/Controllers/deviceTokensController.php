@@ -6,9 +6,16 @@ use App\Models\DeviceToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class DeviceTokensController extends Controller
-{
-   public function storeOrUpdateToken(Request $request)
+class DeviceTokensController extends Controller{
+
+    //index method to get all device tokens
+    public function getAll()
+    {
+        $deviceTokens = DeviceToken::all();
+        return response()->json($deviceTokens);
+    }
+
+    public function storeOrUpdateToken(Request $request)
 {
     $request->validate([
         'token' => 'required|string',

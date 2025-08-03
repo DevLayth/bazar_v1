@@ -29,7 +29,7 @@ Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']
 Route::post('/upload/invoice', [InvoiceController::class, 'upload']);
 
 //send notification to device
-Route::post('/send-notification', [FirebaseController::class, 'sendToDevice'])->name('sendNotification');
+Route::post('/send-notification', [FirebaseController::class, 'sendToMultipleDevices'])->name('sendNotification');
 
 //----------------------------------------Admin EndPoints------------------------------------------------------
 // Admin middleware
