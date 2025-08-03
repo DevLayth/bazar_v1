@@ -27,7 +27,9 @@ class FirebaseController extends Controller
     // send notification to multiple devices tokens from database admin users only
     public function sendToMultipleDevices(Request $request, FirebaseService $firebase)
     {
-        $adminDevices = DB::table('device_tokens')
+        $target = $request->input('target');
+        if($target ==1){
+            $adminDevices = DB::table('device_tokens')
             ->join('users', 'device_tokens.user_id', '=', 'users.id')
             ->where('users.admin', 1)
             ->select('device_tokens.user_id', 'device_tokens.token')
@@ -58,5 +60,73 @@ class FirebaseController extends Controller
             'notified_user_ids' => $successfulUserIds,
             'failed' => $failed
         ]);
-    }
+        // If target is 2, send to all users devices
+        }else if($target == 2){
+            $userDevices = DB::table('device_tokens')
+            ->join('users', 'device_tokens.user_id', '=', 'users.id')
+            ->where('users.admin', 0)
+            ->select('device_tokens.user_id', 'device_tokens.token')
+            ->get();
+
+        $title = $request->input('title', 'Default Title');
+        $body = $request->input('body', 'Default Body');
+        $imgURL = $request->input('img_url', 'https://bazzarv1.newstepiq.com/images/image.png');
+
+        $successfulUserIds = [];
+        $failed = [];
+
+        foreach ($userDevices as $device) {
+            try {
+                $firebase->sendNotification($device->token, $title, $body, $imgURL);
+                $successfulUserIds[] = $device->user_id;
+            } catch (\Throwable $e) {
+                $failed[] = [
+                    'user_id' => $device->user_id,
+                    'token' => $device->token,
+                    'error' => $e->getMessage()
+                ];
+            }
+        }
+
+        return response()->json([
+            'message' => 'Notifications sent',
+            'notified_user_ids' => $successfulUserIds,
+            'failed' => $failed
+        ]);
+
+        // If target is 3, send to guest devices
+        }else if ($target == 3) {
+           $guestDevices = DB::table('device_tokens')
+            ->whereNull('user_id')
+            ->select('token')
+            ->get();
+
+
+        $title = $request->input('title', 'Default Title');
+        $body = $request->input('body', 'Default Body');
+        $imgURL = $request->input('img_url', 'https://bazzarv1.newstepiq.com/images/image.png');
+
+        $successfulUserIds = [];
+        $failed = [];
+
+        foreach ($guestDevices as $device) {
+            try {
+                $firebase->sendNotification($device->token, $title, $body, $imgURL);
+                $successfulUserIds[] = $device->user_id;
+            } catch (\Throwable $e) {
+                $failed[] = [
+                    'user_id' => $device->user_id,
+                    'token' => $device->token,
+                    'error' => $e->getMessage()
+                ];
+            }
+        }
+
+        return response()->json([
+            'message' => 'Notifications sent',
+            'notified_user_ids' => $successfulUserIds,
+            'failed' => $failed
+        ]);
+        }
+}
 }
