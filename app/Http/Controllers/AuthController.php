@@ -190,7 +190,9 @@ public function adminLogin(Request $request)
                 'plan_id' => $planId,
                 'posts_counter' => $posts,
                 'address_1' => $user->profile->address1,
-                'address_2' => $user->profile->address2
+                'address_2' => $user->profile->address2,
+                'latitude' => $user->profile->latitude,
+                'longitude' => $user->profile->longitude,
             ];
         });
     }
@@ -219,6 +221,8 @@ public function adminLogin(Request $request)
                 'email_verified_at' => $user->email_verified_at,
                 'address_1' => $user->profile->address1,
                 'address_2' => $user->profile->address2,
+                'latitude' => $user->profile->latitude,
+                'longitude' => $user->profile->longitude,
 
             ];
         });
