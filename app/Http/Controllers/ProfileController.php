@@ -86,7 +86,7 @@ class ProfileController extends Controller
         $user->save();
          }
 
-         $profileData = $request->only(['type', 'address', 'phone', 'latitude', 'longitude']);
+         $profileData = $request->only(['type', 'address', 'phone', 'latitude', 'longitude','address_1','address_2']);
          $profile->update($profileData);
 
        return response()->json([
