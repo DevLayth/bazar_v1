@@ -48,12 +48,12 @@ class DeviceTokensController extends Controller
             }
         } else {
             DeviceToken::firstOrCreate(
-                ['token' => $request->token],
                 [
+                    'token' => $request->token,
                     'user_id' => null,
                     'language' => $request->language,
                     'device_type' => $request->device_type,
-                ]
+                ],
             );
         }
 
