@@ -19,8 +19,7 @@ class FirebaseService
     public function sendNotification(string $deviceToken, string $title, string $body,$imgURL)
     {
         $message = CloudMessage::withTarget('token', $deviceToken)
-            ->withNotification(Notification::create($title, $body))
-            ->withData(['image' => $imgURL]);
+            ->withNotification(Notification::create($title, $body)->withImage($imgURL));
 
         return $this->messaging->send($message);
     }

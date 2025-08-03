@@ -9,7 +9,7 @@ class FirebaseController extends Controller
 {
     public function sendToDevice(FirebaseService $firebase)
     {
-        $deviceToken = 'f9qT9uLFQymtfxsrGConqq:APA91bHhGK1RGYbw2jy5hEKwq-wjiKLJzqBf6VIs2-xIZXU4GKimnOPWwkas02PvuhqJw-Bj6ebMh_ww2b7q8FSyW4l3AlyQKvQO6L_s-hdPUzhckrFmLZc';
+        $deviceToken = 'dzEwOvMzT72kg3NT4H2F9O:APA91bH4JAI2cJx8BMIJ1FvELClehDSGlBMhwtjqrLSObZXoSwbLgNKVX_KmSbA_XD3v-4bhB3j7-kga4mAUTYTUbOZKImKqKPH_kua7mzOaa9ba47MD9dM';
         $title = 'New Message';
         $body = 'You have a new notification.';
         $imgURL = 'https://bazzarv1.newstepiq.com/images/image.png';
