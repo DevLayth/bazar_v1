@@ -12,6 +12,7 @@ class DeviceToken extends Model
         'token',
         'device_type',
         'user_id',
+        'language',
     ];
 
     public function user(): BelongsTo

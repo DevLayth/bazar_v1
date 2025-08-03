@@ -34,21 +34,18 @@ class FirebaseController extends Controller
         $devices = collect();
 
         if ($target == 1) {
-            // Admin users
             $devices = DB::table('device_tokens')
                 ->join('users', 'device_tokens.user_id', '=', 'users.id')
                 ->where('users.admin', 1)
                 ->select('device_tokens.user_id', 'device_tokens.token')
                 ->get();
         } elseif ($target == 2) {
-            // Regular users
             $devices = DB::table('device_tokens')
                 ->join('users', 'device_tokens.user_id', '=', 'users.id')
                 ->where('users.admin', 0)
                 ->select('device_tokens.user_id', 'device_tokens.token')
                 ->get();
         } elseif ($target == 3) {
-            // Guest users (no user_id)
             $devices = DB::table('device_tokens')
                 ->whereNull('user_id')
                 ->select(DB::raw('NULL as user_id'), 'token')
