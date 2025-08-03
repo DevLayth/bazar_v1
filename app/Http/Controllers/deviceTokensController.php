@@ -20,7 +20,7 @@ class DeviceTokensController extends Controller
     $request->validate([
         'token' => 'required|string',
         'device_type' => 'nullable|string|in:android,ios,web',
-        'language' => 'nullable|integer',
+        'language' => 'required|integer',
     ]);
 
     $userId = Auth::id();
