@@ -6,7 +6,7 @@ use App\Models\DeviceToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class DeviceTokensController extends Controller
+class deviceTokensController extends Controller
 {
     // index method to get all device tokens
     public function getAll()
@@ -48,7 +48,7 @@ public function storeOrUpdateToken(Request $request)
         ]);
     }
 
-    
+
 
     return response()->json([
         'message' => 'Device token saved or updated successfully.',

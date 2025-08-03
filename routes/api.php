@@ -14,7 +14,7 @@ use App\Http\Controllers\ReklamSlideController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\UserPlanSubscriptionController;
 use App\Http\Controllers\AddressController;
-use App\Http\Controllers\DeviceTokensController;
+use App\Http\Controllers\deviceTokensController;
 use App\Http\Controllers\FirebaseController;
 
 
@@ -122,8 +122,8 @@ Route::middleware('User-middleware')->group(function () {
         Route::put('posts/{post}', [PostController::class, 'update'])->name('posts.update');
 
         // Device Token routes
-        Route::post('/device-tokens', [DeviceTokensController::class, 'storeOrUpdateToken']);
-        Route::delete('/device-tokens', [DeviceTokensController::class, 'destroy']);
+        Route::post('/device-tokens', [deviceTokensController::class, 'storeOrUpdateToken']);
+        Route::delete('/device-tokens', [deviceTokensController::class, 'destroy']);
     });
 });
 
