@@ -48,6 +48,7 @@ public function storeOrUpdateToken(Request $request)
         ]);
     }
 
+    
     return response()->json([
         'message' => 'Device token saved or updated successfully.',
     ], 200);
