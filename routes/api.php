@@ -97,6 +97,7 @@ Route::middleware('User-middleware')->group(function () {
     Route::get('/address', [AddressController::class, 'getCitiesWithAreas']);
     Route::post('/device-tokens/guest', [DeviceTokensController::class, 'storeOrUpdateToken']);
     Route::get('/plans', [PlanController::class, 'index']);
+    Route::get('/all-address', [AddressController::class, 'index']);
 
 
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {

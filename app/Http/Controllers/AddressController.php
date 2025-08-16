@@ -7,6 +7,13 @@ use Illuminate\Http\Request;
 
 class AddressController extends Controller
 {
+    //index function
+    public function index()
+    {
+        $addresses = Address::all();
+        return response()->json($addresses);
+    }
+
     // Return all cities with their children (areas)
     public function getCitiesWithAreas()
     {
