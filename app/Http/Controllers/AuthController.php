@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\UserPlanSubscriptionController;
+use App\Models\UserPlanSubscription;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -199,6 +200,8 @@ public function adminLogin(Request $request)
 
     public function getAllStores()
     {
+        $userPlanSubscriptionController = new UserPlanSubscriptionController();
+        $userPlanSubscriptionController->checkExpiredSubscriptions();
         $users = User::with(['profile', 'planSubscriptions'])
             ->where('admin', 0)->where('email_verified_at', '!=', null)
             ->get();

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 class UserPlanSubscriptionController extends Controller
 {
+    const DEFAULT_PLAN_ID = 1;
+
     /**
      * Return the plan_id based on user_id
      *
@@ -36,7 +38,7 @@ class UserPlanSubscriptionController extends Controller
     }
 
 
- 
+
     public function changePlanByUserId($user_id, $plan_id) {
         $subscription = UserPlanSubscription::where('user_id', $user_id)->first();
         if (!$subscription) {
@@ -53,5 +55,21 @@ class UserPlanSubscriptionController extends Controller
             'success' => true,
             'message' => 'Subscription plan updated successfully'
         ],200);
+    }
+
+    public function checkExpiredSubscriptions() {
+        $subscriptions = UserPlanSubscription::with('plan')->get();
+
+        foreach ($subscriptions as $subscription) {
+            $duration = $subscription->plan->duration;
+
+            if ($subscription->created_at < now()->subDays($duration)) {
+                $subscription->plan_id = 1;
+                $subscription->created_at = now();
+                $subscription->updated_at = now();
+                $subscription->posts_counter = 0;
+                $subscription->save();
+            }
+        }
     }
 }

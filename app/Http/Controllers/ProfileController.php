@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Profile;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\UserPlanSubscription;
 
 
 class ProfileController extends Controller
@@ -62,8 +63,24 @@ class ProfileController extends Controller
     }
 
     public function getProfileByUserId($userId) {
+        //subscription check
+        $postCounter = null;
+        $subscription = UserPlanSubscription::where('user_id', $userId)
+                ->latest()
+                ->first();
+        //if subscription expired
+        if($subscription->created_at->addDays($subscription->plan->duration) < now()){
+            $subscription->delete();
+            $subscription = new UserPlanSubscription();
+            $subscription->user_id = $userId;
+            $subscription->plan_id = 1;
+            $postCounter = 0;
+            $subscription->save();
+        }
+            $postCounter = [$subscription->plan->max_posts_per_month, $subscription->posts_counter];
+        //end subscription check
         $profile = Profile::where('user_id', $userId)->firstOrFail();
-        return response()->json($profile);
+        return response()->json(['profile' => $profile, 'subscription' => $subscription , 'postCounter' => $postCounter]);
     }
 
     public function updateProfileByUserId(Request $request, $userId){
