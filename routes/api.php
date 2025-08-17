@@ -108,9 +108,9 @@ Route::middleware('User-middleware')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
 
         // Profile routes
-        Route::get('profiles/user/{userId}', [ProfileController::class, 'getProfileByUserId']);
-        Route::put('profiles/user/{userId}', [ProfileController::class, 'updateProfileByUserId']);
-        Route::post('profiles/user/{userId}/upload-image', [ProfileController::class, 'uploadProfileImg']);
+        Route::get('profiles/user', [ProfileController::class, 'getProfileByUserId']);
+        Route::put('profiles/user', [ProfileController::class, 'updateProfileByUserId']);
+        Route::post('profiles/user/upload-image', [ProfileController::class, 'uploadProfileImg']);
 
         // Post routes
         Route::post('posts', [PostController::class, 'store']);

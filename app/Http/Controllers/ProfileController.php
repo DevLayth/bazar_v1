@@ -62,24 +62,26 @@ class ProfileController extends Controller
         return response()->json(['message' => 'Profile deleted successfully.']);
     }
 
-    public function getProfileByUserId($userId) {
+    public function getProfileByUserId(Request $request) {
+
+        $id= $request->user()->id;
         //subscription check
         $postCounter = null;
-        $subscription = UserPlanSubscription::where('user_id', $userId)
+        $subscription = UserPlanSubscription::where('user_id', $id)
                 ->latest()
                 ->first();
         //if subscription expired
         if($subscription->created_at->addDays($subscription->plan->duration) < now()){
             $subscription->delete();
             $subscription = new UserPlanSubscription();
-            $subscription->user_id = $userId;
+            $subscription->user_id = $id;
             $subscription->plan_id = 1;
             $postCounter = 0;
             $subscription->save();
         }
             $postCounter = [$subscription->plan->max_posts_per_month, $subscription->posts_counter];
         //end subscription check
-        $profile = Profile::where('user_id', $userId)->firstOrFail();
+        $profile = Profile::where('user_id', $id)->firstOrFail();
         return response()->json(['profile' => $profile, 'subscription' => $subscription , 'postCounter' => $postCounter]);
     }
 
@@ -113,8 +115,9 @@ class ProfileController extends Controller
          ]);
     }
 
-    public function updateProfileImgByUserId(Request $request, $userId){
-        $profile = Profile::where('user_id', $userId)->firstOrFail();
+    public function updateProfileImgByUserId(Request $request){
+        $id= $request->user()->id;
+        $profile = Profile::where('user_id', $id)->firstOrFail();
 
         $request->validate([
             'img' => 'nullable|string',
@@ -124,15 +127,14 @@ class ProfileController extends Controller
         return response()->json(['message' => 'Profile updated successfully.', 'profile' => $profile]);
     }
 
-    public function uploadProfileImg(Request $request, $userId)  {
+    public function uploadProfileImg(Request $request)  {
         try {
             $request->validate([
-                'user_id' => 'required|exists:profiles,user_id',
                 'image' => 'required|image',
             ]);
 
-            $user = User::findOrFail($request->user_id);
-            $profile = Profile::where('user_id', $request->user_id)->firstOrFail();
+            $user = User::findOrFail($request->user()->id);
+            $profile = Profile::where('user_id', $request->user()->id)->firstOrFail();
 
             if($profile->img != 'image.png'){
                  if ($profile->img && file_exists(public_path('images/profile') . '/' . $profile->img )) {
