@@ -85,9 +85,9 @@ class ProfileController extends Controller
         return response()->json(['profile' => $profile, 'subscription' => $subscription , 'postCounter' => $postCounter]);
     }
 
-    public function updateProfileByUserId(Request $request, $userId){
-        $profile = Profile::where('user_id', $userId)->firstOrFail();
-         $user = User::findOrFail($userId);
+    public function updateProfileByUserId(Request $request){
+        $profile = Profile::where('user_id', $request->user()->id)->firstOrFail();
+        $user = User::findOrFail($request->user()->id);
 
          $request->validate([
         'name' => 'nullable|string',
