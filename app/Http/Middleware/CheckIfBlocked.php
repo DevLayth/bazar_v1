@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class CheckIfBlocked
 {
@@ -16,9 +16,9 @@ class CheckIfBlocked
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->blocked) {
+        if ($request->user()->blocked) {
             // Auth::logout();
-            return redirect()->route('login')->with('error', 'Your account has been blocked.');
+            return response()->json(['message' => 'Your account has been blocked. Contact support.'], 401);
         }
         return $next($request);
     }
