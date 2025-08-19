@@ -101,7 +101,7 @@ Route::middleware('User-middleware')->group(function () {
     Route::get('/all-address', [AddressController::class, 'index']);
 
 
-    Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::middleware(['auth:sanctum', 'verified', 'Blocked'])->group(function () {
         Route::get('/user', function (Request $request) {
             return $request->user();
         });

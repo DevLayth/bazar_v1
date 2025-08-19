@@ -2,11 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Closure;
 
-class VerifyUserApiKey
+class CheckIfBlocked
 {
     /**
      * Handle an incoming request.
@@ -15,10 +15,9 @@ class VerifyUserApiKey
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $apiKey = $request->header('X-API-KEY');
-
-        if ($apiKey !== env('USER_API_KEY')) {
-            return response()->json(['message' => 'Invalid API-KEY Unauthorized'], 401);
+        if (Auth::check() && Auth::user()->blocked) {
+            // Auth::logout();
+            return redirect()->route('login')->with('error', 'Your account has been blocked.');
         }
         return $next($request);
     }
