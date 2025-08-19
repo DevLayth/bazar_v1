@@ -50,6 +50,7 @@ Route::middleware('Admin-middleware')->group(function () {
 
         // Store Management
         Route::get('/admin-stores', [AuthController::class, 'getAllStores']);
+        Route::post('/admin-stores/block/{id}', [AuthController::class, 'toggleBlockUser']);
         Route::post('/admin-stores/{userId}/change-plan/{planId}', [UserPlanSubscriptionController::class, 'changePlanByUserId']);
 
         // Category Management

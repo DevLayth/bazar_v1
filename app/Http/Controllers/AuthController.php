@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\UserPlanSubscriptionController;
-use App\Models\UserPlanSubscription;
 use App\Models\Profile;
 use App\Models\User;
+use App\Models\UserPlanSubscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -92,44 +92,42 @@ class AuthController extends Controller
         ], 200);
     }
 
-public function adminLogin(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email|exists:users,email',
-        'password' => 'required|string|min:6',
-    ]);
+    public function adminLogin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|string|min:6',
+        ]);
 
-    // Check if the user exists and is an admin
-    $user = User::where('email', $request->email)
-        ->where('admin', true)
-        ->first();
+        // Check if the user exists and is an admin
+        $user = User::where('email', $request->email)
+            ->where('admin', true)
+            ->first();
 
-    if (!$user || !Hash::check($request->password, $user->password)) {
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'The provided credentials are incorrect.'
+            ], 401);
+        }
+
+        // Ensure the email is verified
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your email address is not verified.'
+            ], 401);
+        }
+
+        $token = $user->createToken($user->name . '_admin_token')->plainTextToken;
+
         return response()->json([
-            'success' => false,
-            'message' => 'The provided credentials are incorrect.'
-        ], 401);
+            'success' => true,
+            'message' => 'Login successful.',
+            'user' => $user,
+            'token' => $token
+        ], 200);
     }
-
-    // Ensure the email is verified
-    if (!$user->hasVerifiedEmail()) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Your email address is not verified.'
-        ], 401);
-    }
-
-
-    $token = $user->createToken($user->name . '_admin_token')->plainTextToken;
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Login successful.',
-        'user' => $user,
-        'token' => $token
-    ], 200);
-}
-
 
     public function logout(Request $request)
     {
@@ -203,7 +201,8 @@ public function adminLogin(Request $request)
         $userPlanSubscriptionController = new UserPlanSubscriptionController();
         $userPlanSubscriptionController->checkExpiredSubscriptions();
         $users = User::with(['profile', 'planSubscriptions'])
-            ->where('admin', 0)->where('email_verified_at', '!=', null)
+            ->where('admin', 0)
+            ->where('email_verified_at', '!=', null)
             ->get();
 
         return $users->map(function ($user) {
@@ -226,8 +225,22 @@ public function adminLogin(Request $request)
                 'address_2' => $user->profile->address2,
                 'latitude' => $user->profile->latitude,
                 'longitude' => $user->profile->longitude,
-
             ];
         });
+    }
+
+    public function toggleBlockUser($id)
+    {
+        $user = User::findOrFail($id);
+
+        $user->blocked = !$user->blocked;
+        $user->save();
+
+        $status = $user->blocked ? 'blocked' : 'unblocked';
+
+        return response()->json([
+            'message' => "User $status successfully",
+            'user' => $user
+        ]);
     }
 }
