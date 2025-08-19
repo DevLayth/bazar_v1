@@ -203,6 +203,41 @@ class AuthController extends Controller
         $users = User::with(['profile', 'planSubscriptions'])
             ->where('admin', 0)
             ->where('email_verified_at', '!=', null)
+            ->where('blocked', false)
+            ->get();
+
+        return $users->map(function ($user) {
+            $planSubscription = $user->planSubscriptions->sortByDesc('created_at')->first();
+            $planId = $planSubscription->pivot->plan_id ?? null;
+            $posts = $planSubscription->pivot->posts_counter ?? null;
+
+            return [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'blocked' => $user->blocked,
+                'img' => $user->profile->img ?? null,
+                'phone' => $user->profile->phone ?? null,
+                'plan_id' => $planId,
+                'address' => $user->profile->address,
+                'posts_counter' => $posts,
+                'created_at' => $user->created_at,
+                'email_verified_at' => $user->email_verified_at,
+                'address_1' => $user->profile->address1,
+                'address_2' => $user->profile->address2,
+                'latitude' => $user->profile->latitude,
+                'longitude' => $user->profile->longitude,
+            ];
+        });
+    }
+
+    public function getAllStoresForAdmin()
+    {
+        $userPlanSubscriptionController = new UserPlanSubscriptionController();
+        $userPlanSubscriptionController->checkExpiredSubscriptions();
+        $users = User::with(['profile', 'planSubscriptions'])
+            ->where('admin', 0)
+            ->where('email_verified_at', '!=', null)
             ->get();
 
         return $users->map(function ($user) {

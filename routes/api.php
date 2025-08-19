@@ -49,7 +49,7 @@ Route::middleware('Admin-middleware')->group(function () {
         Route::put('/admin-posts/approve/{post}', [PostController::class, 'approvePost']);
 
         // Store Management
-        Route::get('/admin-stores', [AuthController::class, 'getAllStores']);
+        Route::get('/admin-stores', [AuthController::class, 'getAllStoresForAdmin']);
         Route::post('/admin-stores/block/{id}', [AuthController::class, 'toggleBlockUser']);
         Route::post('/admin-stores/{userId}/change-plan/{planId}', [UserPlanSubscriptionController::class, 'changePlanByUserId']);
 
