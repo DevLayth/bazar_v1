@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Auth;
+// use Illuminate\Support\Facades\Auth;
 use Closure;
 
 class VerifyUserApiKey
@@ -22,9 +22,9 @@ class VerifyUserApiKey
             return response()->json(['message' => 'Invalid API-KEY Unauthorized'], 401);
         }
 
-        if (Auth::user()->blocked) {
-            return redirect()->route('login')->with('error', 'Your account has been blocked.');
-        }
+        // if (Auth::user()->blocked) {
+        //     return redirect()->route('login')->with('error', 'Your account has been blocked.');
+        // }
         return $next($request);
     }
 }
