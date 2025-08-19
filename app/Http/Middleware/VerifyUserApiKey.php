@@ -20,6 +20,7 @@ class VerifyUserApiKey
         if ($apiKey !== env('USER_API_KEY')) {
             return response()->json(['message' => 'Invalid API-KEY Unauthorized'], 401);
         }
+        
 
         return $next($request);
     }
