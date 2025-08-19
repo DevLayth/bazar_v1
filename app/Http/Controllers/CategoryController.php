@@ -8,14 +8,18 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     public function index()
-    {
-        $categories = Category::with('children')
-            ->whereNull('parent_id')
-            ->select('id', 'nameEN', 'nameKU', 'nameAR', 'image', 'parent_id')
-            ->get();
+{
+    $categories = Category::with(['children' => function ($query) {
+            $query->orderBy('position', 'asc'); 
+        }])
+        ->whereNull('parent_id')
+        ->select('id', 'nameEN', 'nameKU', 'nameAR', 'image', 'parent_id')
+        ->orderBy('position', 'asc')
+        ->get();
 
-        return response()->json($categories);
-    }
+    return response()->json($categories);
+}
+
 
     public function getAllCategories()
     {
@@ -64,7 +68,6 @@ class CategoryController extends Controller
         return response()->json($category, 201);
     }
 
-    // Update an existing category image
     public function updateImg(Request $request, $id)
     {
         $category = Category::findOrFail($id);
@@ -87,7 +90,6 @@ class CategoryController extends Controller
         return response()->json($category, 200);
     }
 
-    // Update an existing category name
     public function updateName(Request $request, $id)
     {
         $category = Category::findOrFail($id);
@@ -105,7 +107,6 @@ class CategoryController extends Controller
         return response()->json($category, 200);
     }
 
-    // Delete a category
     public function destroy($id)
     {
         $category = Category::find($id);

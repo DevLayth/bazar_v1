@@ -15,6 +15,7 @@ class Category extends Model
         'nameAR',
         'image',
         'parent_id',
+        'position',
     ];
 
     public function parent()
