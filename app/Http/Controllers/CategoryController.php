@@ -8,18 +8,17 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     public function index()
-{
-    $categories = Category::with(['children' => function ($query) {
+    {
+        $categories = Category::with(['children' => function ($query) {
             $query->orderBy('position', 'asc');
         }])
-        ->whereNull('parent_id')
-        ->select('id', 'nameEN', 'nameKU', 'nameAR', 'image', 'parent_id', 'position')
-        ->orderBy('position', 'asc')
-        ->get();
+            ->whereNull('parent_id')
+            ->select('id', 'nameEN', 'nameKU', 'nameAR', 'image', 'parent_id', 'position')
+            ->orderBy('position', 'asc')
+            ->get();
 
-    return response()->json($categories);
-}
-
+        return response()->json($categories);
+    }
 
     public function getAllCategories()
     {
@@ -122,5 +121,28 @@ class CategoryController extends Controller
         $category->delete();
 
         return response()->json(['message' => 'Category deleted'], 200);
+    }
+
+    public function reorder(Request $request)
+    {
+        $categories = $request->input('categories');  // nested array of {id, parent_id, position, children}
+
+        $this->updateOrder($categories, null);
+
+        return response()->json(['message' => 'Categories reordered successfully']);
+    }
+
+    private function updateOrder($categories, $parentId)
+    {
+        foreach ($categories as $index => $category) {
+            Category::where('id', $category['id'])->update([
+                'parent_id' => $parentId,
+                'position' => $index,
+            ]);
+
+            if (!empty($category['children'])) {
+                $this->updateOrder($category['children'], $category['id']);
+            }
+        }
     }
 }

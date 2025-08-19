@@ -58,6 +58,7 @@ Route::middleware('Admin-middleware')->group(function () {
         Route::put('/admin-categories-name/{id}', [CategoryController::class, 'updateName']);
         Route::post('/admin-categories-img/{id}', [CategoryController::class, 'updateImg']);
         Route::delete('/admin-categories/{id}', [CategoryController::class, 'destroy']);
+        Route::post('/admin/categories/reorder', [CategoryController::class, 'reorder']);
 
         // Reklam Slide Management
         Route::get('/admin-reklam-slide', [ReklamSlideController::class, 'index']);
