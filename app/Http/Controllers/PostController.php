@@ -19,11 +19,13 @@ class PostController extends Controller
 {
     use AuthorizesRequests;
 
-    // all posts that are not pending
+    // all posts that are not pending and user is not blocked
     public function index()
     {
         try {
-            $posts = Post::with(['user.profile'])->latest()->where('pending', false)->get()->map(function ($post) {
+            $posts = Post::with(['user.profile'])->latest()->where('pending', false)->whereHas('user', function ($query) {
+                $query->where('blocked', false);
+            })->get()->map(function ($post) {
                 return [
                     'id' => $post->id,
                     'user_id' => $post->user->id,
