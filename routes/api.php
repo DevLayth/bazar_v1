@@ -101,7 +101,7 @@ Route::middleware('User-middleware')->group(function () {
     Route::get('/all-address', [AddressController::class, 'index']);
 
 
-    Route::middleware(['auth:sanctum', 'verified', 'Blocked'])->group(function () {
+    Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('/user', function (Request $request) {
             return $request->user();
         });
@@ -112,12 +112,13 @@ Route::middleware('User-middleware')->group(function () {
         Route::get('profiles/user', [ProfileController::class, 'getProfileByUserId']);
         Route::put('profiles/user', [ProfileController::class, 'updateProfileByUserId']);
         Route::post('profiles/user/upload-image', [ProfileController::class, 'uploadProfileImg']);
-
-        // Post routes
-        Route::post('posts', [PostController::class, 'store']);
-        Route::get('posts', [PostController::class, 'userPosts']);
-        Route::delete('posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
-        Route::put('posts/{post}', [PostController::class, 'update'])->name('posts.update');
+        // Posts
+        Route::middleware('Blocked')->group(function () {
+            Route::post('posts', [PostController::class, 'store']);
+            Route::get('posts', [PostController::class, 'userPosts']);
+            Route::delete('posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+            Route::put('posts/{post}', [PostController::class, 'update'])->name('posts.update');
+        });
 
         // Device Token routes
         Route::post('/device-tokens', [deviceTokensController::class, 'storeOrUpdateToken']);
