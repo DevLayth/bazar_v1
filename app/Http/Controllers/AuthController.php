@@ -214,6 +214,7 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'blocked' => $user->blocked,
                 'img' => $user->profile->img ?? null,
                 'phone' => $user->profile->phone ?? null,
                 'plan_id' => $planId,
