@@ -8,17 +8,15 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     public function index()
-    {
-        $categories = Category::with(['children' => function ($query) {
-            $query->orderBy('position', 'asc');
-        }])
-            ->whereNull('parent_id')
-            ->select('id', 'nameEN', 'nameKU', 'nameAR', 'image', 'parent_id', 'position')
-            ->orderBy('position', 'asc')
-            ->get();
+{
+    $categories = Category::with('childrenRecursive')
+        ->whereNull('parent_id')
+        ->select('id', 'nameEN', 'nameKU', 'nameAR', 'image', 'parent_id', 'position')
+        ->orderBy('position') // order root categories
+        ->get();
 
-        return response()->json($categories);
-    }
+    return response()->json($categories);
+}
 
     public function getAllCategories()
     {
