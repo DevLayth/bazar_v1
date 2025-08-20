@@ -9,7 +9,7 @@ class CategoryController extends Controller
 {
     public function index()
 {
-    $categories = Category::with('childrenRecursive')
+    $categories = Category::with('childrenRecursive as children')
         ->whereNull('parent_id')
         ->select('id', 'nameEN', 'nameKU', 'nameAR', 'image', 'parent_id', 'position')
         ->orderBy('position') // order root categories
