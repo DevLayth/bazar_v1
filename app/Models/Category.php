@@ -25,14 +25,9 @@ class Category extends Model
 
     public function children()
     {
-        return $this->hasMany(Category::class, 'parent_id', 'id')->with('children');
-    }
-
-    public function childrenRecursive()
-    {
         return $this
             ->hasMany(Category::class, 'parent_id')
             ->orderBy('position')
-            ->with('childrenRecursive');
+            ->with('children');
     }
 }
