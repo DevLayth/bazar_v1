@@ -250,8 +250,16 @@ class PostController extends Controller
                 'category_id' => 'nullable|exists:categories,id',
             ]);
 
-            $dataToUpdate = $request->only(['title', 'body', 'price', 'currency', 'category_id']);
+            $user = Auth::user();
+            $subscription = UserPlanSubscription::where('user_id', $user->id)
+                ->latest()
+                ->first();
 
+            if ($subscription->plan_id === 1) {
+                $post->update(['pending' => 1]);
+            }
+
+            $dataToUpdate = $request->only(['title', 'body', 'price', 'currency', 'category_id']);
             $post->update($dataToUpdate);
 
             return response()->json([
