@@ -239,6 +239,7 @@ class PostController extends Controller
 
     public function update(Request $request, Post $post)
     {
+        $isFreePlan = false;
         try {
             $this->authorize('modify', $post);
 
@@ -256,6 +257,7 @@ class PostController extends Controller
                 ->first();
 
             if ($subscription->plan_id === 1) {
+                $isFreePlan = true;
                 $post->update(['pending' => 1]);
             }
 
@@ -264,7 +266,7 @@ class PostController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Post updated successfully.',
+                'message' => $isFreePlan ? 'Post updated successfully. Waiting for approval.' : 'Post updated successfully.',
                 'data' => $post,
             ]);
         } catch (\Exception $e) {
